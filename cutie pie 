@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>❤️ [Uska Naam] Ke Liye ❤️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Pacifico&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    :root { --primary: #ff69b4; --dark: #2c1a3d; --light: #fff5f9; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Pacifico', cursive;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      color: white;
+      overflow: hidden;
+      height: 100vh;
+      transition: all 0.5s;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .dark-mode { background: linear-gradient(135deg, var(--dark), #1a0033); }
+    .lock-screen {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9); z-index: 100;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+    }
+    .container { display: none; z-index: 10; padding: 20px; }
+    h1 { font-size: 3.5rem; margin: 20px 0; }
+    .letter { display: inline-block; font-size: 3rem; margin: 0 5px; opacity: 0; animation: pop 0.6s forwards; }
+    @keyframes pop { 0% { transform: scale(0) rotate(-180deg); opacity: 0; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+    .heart-letter { color: #ff1493; animation: beat 1.2s infinite; }
+    @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
+    button {
+      padding: 15px 40px; font-size: 1.5rem; margin: 15px; border: none;
+      border-radius: 50px; cursor: pointer; font-family: 'Pacifico', cursive;
+      transition: 0.3s;
+    }
+    .yes-btn { background: #ff69b4; color: white; }
+    .yes-btn:hover { background: #ff1493; transform: scale(1.1); }
+    .no-btn { background: #ccc; color: #666; }
+    .no-btn:hover { background: #ff4444; color: white; }
+    .celebration { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 99; }
+    .toggle-dark { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: white; }
+  </style>
+</head>
+<body>
+
+  <!-- PASSWORD SCREEN -->
+  <div class="lock-screen" id="lockScreen">
+    <h2>🔐 Secret Code Daalo</h2>
+    <p>Hint: Hamara special din? (ddmm)</p>
+    <input type="password" id="secretCode" placeholder="Jaise 0608" style="padding:12px; font-size:1.2rem; margin:10px; border-radius:10px; border:none; width:200px;">
+    <button onclick="unlock()" style="padding:12px 25px; font-size:1rem;">Kholo</button>
+    <p id="error" style="color:#ff4444; margin-top:10px;"></p>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="container" id="mainContent">
+    <button class="toggle-dark" onclick="toggleDarkMode()">🌙</button>
+
+    <h1 id="name1"></h1>
+    <h1 style="font-size:2.5rem;">+</h1>
+    <h1 id="name2"></h1>
+
+    <p style="font-size:1.8rem; margin:30px 0;">
+      Yeh dil sirf tumhare liye dhadakta hai... ❤️<br>
+      Har pal, har saans mein tum hi ho.
+    </p>
+
+    <h2 style="margin:30px 0; font-size:2.5rem;">Kya tum meri girlfriend banogi?</h2>
+
+    <button class="yes-btn" onclick="sayYes()">Haan ❤️</button>
+    <button class="no-btn" onclick="sayNo()">Nahi 😢</button>
+
+    <div class="celebration" id="celebration"></div>
+  </div>
+
+  <!-- MUSIC (Online Link - Kisi bhi mobile mein bajega!) -->
+  <audio id="loveSong" loop>
+    <source src="https://www.soundjay.com/human/sounds/heart-beat-1.mp3" type="audio/mp3">
+    <!-- Ya yeh romantic song daal do (free online) -->
+    <!-- <source src="https://www.bensound.com/bensound-music/bensound-sweet.mp3" type="audio/mp3"> -->
+  </audio>
+
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    // === TUM YAHAN EDIT KARO ===
+    const BOY_NAME = "Rahul";          // Apna naam
+    const GIRL_NAME = "Priya";         // Uska naam
+    const SECRET_CODE = "0608";        // 6 August 2025 → 0608
+    const WHATSAPP_NUMBER = "+919876543210"; // TUMHARA WHATSAPP NUMBER (international format)
+    // ===========================
+
+    let noCount = 0;
+
+    // Unlock
+    function unlock() {
+      const input = document.getElementById('secretCode').value;
+      if (input === SECRET_CODE) {
+        document.getElementById('lockScreen').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+        animateNames();
+        playMusic();
+      } else {
+        document.getElementById('error').innerText = "Galat code! Hint: 06/08/2025";
+      }
+    }
+
+    // Animate Names
+    function animateNames() {
+      const name1 = document.getElementById('name1');
+      const name2 = document.getElementById('name2');
+      
+      [...BOY_NAME].forEach((char, i) => {
+        const span = document.createElement('span');
+        span.classList.add('letter');
+        span.innerHTML = char === ' ' ? '&nbsp;' : char;
+        span.style.animationDelay = `${i * 0.1}s`;
+        if (Math.random() > 0.5) span.classList.add('heart-letter');
+        name1.appendChild(span);
+      });
+
+      [...GIRL_NAME].forEach((char, i) => {
+        const span = document.createElement('span');
+        span.classList.add('letter');
+        span.innerHTML = char === ' ' ? '&nbsp;' : char;
+        span.style.animationDelay = `${(BOY_NAME.length + i) * 0.1}s`;
+        if (Math.random() > 0.5) span.classList.add('heart-letter');
+        name2.appendChild(span);
+      });
+    }
+
+    // Play Music (User click ke baad)
+    function playMusic() {
+      document.body.addEventListener('click', function() {
+        const audio = document.getElementById('loveSong');
+        audio.play().catch(() => {});
+      }, { once: true });
+    }
+
+    // YES → TUMHE WHATSAPP PE MESSAGE AAYEGA!
+    function sayYes() {
+      confetti({ particleCount: 200, spread: 70, origin: { y: 0.6 } });
+      setTimeout(() => confetti({ particleCount: 100, angle: 60, spread: 55, origin: { x: 0 } }), 200);
+      setTimeout(() => confetti({ particleCount: 100, angle: 120, spread: 55, origin: { x: 1 } }), 400);
+
+      // TUMHE NOTIFICATION BHJEGA
+      const message = encodeURIComponent(`${GIRL_NAME} ne HAAN bola! ❤️ Website se accept kiya!`);
+      const waLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${message}`;
+      window.open(waLink, '_blank');
+
+      document.querySelector('h2').innerHTML = 
+        `<h1 style="color:#fff; animation: glow 1s infinite alternate;">
+          🎉 YES! AB HUM HAMESHA SAATH! 🎉
+         </h1>`;
+    }
+
+    // NO (Cute wala)
+    function sayNo() {
+      noCount++;
+      const btn = document.querySelector('.no-btn');
+      btn.innerText = noCount === 1 ? "Pakka?" : noCount === 2 ? "Soch lo!" : "Ab HAAN hi bol do na! 🥺";
+      btn.style.transform = `translate(${Math.random()*100-50}px, ${Math.random()*100-50}px)`;
+      if (noCount > 3) {
+        btn.style.display = 'none';
+        document.querySelector('.yes-btn').innerText = "Bas HAAN hi option hai! 😘";
+      }
+    }
+
+    // Dark Mode
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+  </script>
+</body>
+</html>
